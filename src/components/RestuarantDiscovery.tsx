@@ -8,18 +8,47 @@ const RestaurantDiscovery = () => {
   const { restaurants, updateRestaurantStatus } = useRestaurantContext();
   const [refreshKey, setRefreshKey] = useState(0);
   const navigate = useNavigate();
+  const [flashClass, setFlashClass] = useState(""); // State to manage flash effect
 
   const onSwipe = (direction: string, name: string) => {
     const status =
-      direction === "left" ? "no" : direction === "right" ? "maybe" : undefined;
+      direction === "left"
+        ? "no"
+        : direction === "right"
+        ? "maybe"
+        : direction === "up"
+        ? "accepted"
+        : undefined;
+
     if (status) {
+      // Trigger the appropriate flash class
+      if (direction === "left") {
+        setFlashClass("flash-red");
+      } else if (direction === "right") {
+        setFlashClass("flash-yellow");
+      } else if (direction === "up") {
+        setFlashClass("flash-green"); // Trigger green flash
+      }
+
       updateRestaurantStatus(name, status);
+
+      // Remove the flash effect after 500ms
+      setTimeout(() => {
+        setFlashClass("");
+      }, 1000);
     }
+
     setRefreshKey((prevKey) => prevKey + 1);
   };
 
   const onDoubleTap = (name: string) => {
+    setFlashClass("flash-green"); // Trigger green flash
     updateRestaurantStatus(name, "accepted");
+
+    // Remove the flash effect after 500ms
+    setTimeout(() => {
+      setFlashClass("");
+    }, 1000);
   };
 
   const goToDetails = (restaurant: any) => {
@@ -27,6 +56,9 @@ const RestaurantDiscovery = () => {
   };
 
   return (
+    <div
+      className={`min-h-screen flex flex-col bg-gray-100 transition-all duration-500 ${flashClass}`} // Add flash class dynamically
+    >
     <div className="min-h-screen flex flex-col bg-gray-100">
       {/* Header */}
       <header className="bg-gradient-to-b from-purple-500 to-purple-400 rounded-b-3xl p-6">
@@ -44,7 +76,7 @@ const RestaurantDiscovery = () => {
                 className="absolute w-full h-full rounded-3xl shadow-lg overflow-hidden"
                 key={restaurant.name}
                 onSwipe={(dir) => onSwipe(dir, restaurant.name)}
-                preventSwipe={["up"]}
+                preventSwipe={[]}
               >
                 <div
                   className="relative w-full h-full"
@@ -107,6 +139,7 @@ const RestaurantDiscovery = () => {
           <span className="text-xs">Profile</span>
         </button>
       </nav>
+    </div>
     </div>
   );
 };
