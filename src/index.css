@@ -15,3 +15,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.flash-red {
+  border-left: 50px solid red;
+}
+
+.flash-yellow {
+  border-right: 50px solid orange;
+}
+
+.flash-green {
+  border-left: 50px solid green;
+  border-right: 50px solid green;
+}
