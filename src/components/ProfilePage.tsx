@@ -53,7 +53,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-[100vh] bg-gray-100 flex flex-col">
       {/* Header */}
       <header className="bg-gradient-to-b from-purple-500 to-purple-400 p-6 rounded-b-3xl shadow-lg">
         <h1 className="text-white text-3xl font-bold">Profile</h1>

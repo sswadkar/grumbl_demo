@@ -59,7 +59,7 @@ const RestaurantDiscovery = () => {
     <div
       className={`min-h-screen flex flex-col bg-gray-100 transition-all duration-500 ${flashClass}`} // Add flash class dynamically
     >
-    <div className="min-h-screen flex flex-col bg-gray-100">
+    <div className="min-h-[100vh] flex flex-col bg-gray-100">
       {/* Header */}
       <header className="bg-gradient-to-b from-purple-500 to-purple-400 rounded-b-3xl p-6">
         <h1 className="text-white text-3xl font-bold">Discover</h1>

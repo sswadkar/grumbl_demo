@@ -12,7 +12,7 @@ const SavedRestaurants = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-[100vh] bg-gray-100 flex flex-col">
       {/* Header */}
       <header className="bg-gradient-to-b from-purple-500 to-purple-400 rounded-b-3xl p-6">
         <h1 className="text-white text-3xl font-bold">Saved Restaurants</h1>
