@@ -67,7 +67,7 @@ const RestaurantDiscovery = () => {
 
       {/* Swipeable Cards */}
       <main className="flex-grow flex items-center justify-center px-6 py-4">
-        <div className="w-full h-[75vh] lg:w-[50vh] relative" key={refreshKey}>
+        <div className="w-full h-[70vh] lg:w-[50vh] relative" key={refreshKey}>
           {restaurants
             .filter((restaurant) => restaurant.status === "maybe") // Filter by status "maybe"
             .sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0)) // Sort by lastModified in reverse order
