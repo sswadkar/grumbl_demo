@@ -25,6 +25,6 @@ code {
 }
 
 .flash-green {
-  border-left: 50px solid green;
-  border-right: 50px solid green;
+  border-left: 25px solid green;
+  border-right: 25px solid green;
 }
