@@ -20,7 +20,7 @@ const SavedRestaurants = () => {
 
       {/* Saved Restaurants */}
       <main className="flex-grow p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {restaurants
             .filter((restaurant) => restaurant.status === "accepted") // Only "accepted" restaurants
             .map((restaurant) => (
