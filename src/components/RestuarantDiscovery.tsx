@@ -3,74 +3,135 @@ import TinderCard from "react-tinder-card";
 import { FaSearch, FaBookmark, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
+type Restaurant = {
+  name: string;
+  images: string[];
+  distance: string;
+  likes: string;
+  tags: string[];
+  description: string;
+  reviews: string[];
+  status: "no" | "maybe" | "accepted"; // Status for each restaurant
+  lastModified: number; // Timestamp for last modification
+};
+
 const RestaurantDiscovery = () => {
-  const [lastDirection, setLastDirection] = useState("");
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([
+    {
+      name: "Frida Midtown",
+      images: [
+        "/images/cafeintermezzo.jpg",
+        "/images/fridamidtown.avif",
+        "/images/yuh.jpg",
+      ],
+      distance: "0.5 miles away",
+      likes: "3 friends liked this place",
+      tags: ["Mexican", "Casual", "Bar"],
+      description:
+        "Frida Midtown offers a vibrant atmosphere with delicious Mexican food and refreshing cocktails.",
+      reviews: [
+        "Great food and drinks!",
+        "Loved the ambiance and the service was excellent.",
+        "A bit pricey but worth it for special occasions.",
+      ],
+      status: "maybe",
+      lastModified: -1, // Placeholder timestamp
+    },
+    {
+      name: "Sushi Central",
+      images: [
+        "/images/cafeintermezzo.jpg",
+        "/images/fridamidtown.avif",
+        "/images/yuh.jpg",
+      ],
+      distance: "1.2 miles away",
+      likes: "5 friends liked this place",
+      tags: ["Japanese", "Casual", "Sushi"],
+      description:
+        "Sushi Central offers fresh sushi and a cozy atmosphere to enjoy authentic Japanese cuisine.",
+      reviews: [
+        "Absolutely loved the sushi rolls!",
+        "Great value for the price.",
+        "Service was a bit slow, but the food made up for it.",
+      ],
+      status: "maybe",
+      lastModified: -1, // Placeholder timestamp
+    },
+    {
+      name: "Pasta Bella",
+      images: [
+        "/images/cafeintermezzo.jpg",
+        "/images/fridamidtown.avif",
+        "/images/yuh.jpg",
+      ],
+      distance: "0.8 miles away",
+      likes: "2 friends liked this place",
+      tags: ["Italian", "Romantic", "Pasta"],
+      description:
+        "Pasta Bella offers handmade pasta and a romantic ambiance for a perfect dinner date.",
+      reviews: [
+        "The pasta was heavenly!",
+        "Romantic vibe, great for a date night.",
+        "A little expensive, but worth the splurge.",
+      ],
+      status: "maybe",
+      lastModified: -1, // Placeholder timestamp
+    },
+  ]);
+
+  const [refreshKey, setRefreshKey] = useState(0);
   const navigate = useNavigate();
 
-  const restaurants = [
-    {
-      name: "Frida Midtown",
-      images: [
-        "/images/cafeintermezzo.jpg",
-        "/images/fridamidtown.avif",
-        "/images/yuh.jpg",
-      ],
-      distance: "0.5 miles away",
-      likes: "3 friends liked this place",
-      tags: ["Mexican", "Casual", "Bar"],
-      description:
-        "Frida Midtown offers a vibrant atmosphere with delicious Mexican food and refreshing cocktails.",
-      reviews: [
-        "Great food and drinks!",
-        "Loved the ambiance and the service was excellent.",
-        "A bit pricey but worth it for special occasions.",
-      ]
-    },
-    {
-      name: "Frida Midtown",
-      images: [
-        "/images/cafeintermezzo.jpg",
-        "/images/fridamidtown.avif",
-        "/images/yuh.jpg",
-      ],
-      distance: "0.5 miles away",
-      likes: "3 friends liked this place",
-      tags: ["Mexican", "Casual", "Bar"],
-      description:
-        "Frida Midtown offers a vibrant atmosphere with delicious Mexican food and refreshing cocktails.",
-      reviews: [
-        "Great food and drinks!",
-        "Loved the ambiance and the service was excellent.",
-        "A bit pricey but worth it for special occasions.",
-      ]
-    },
-    {
-      name: "Frida Midtown",
-      images: [
-        "/images/cafeintermezzo.jpg",
-        "/images/fridamidtown.avif",
-        "/images/yuh.jpg",
-      ],
-      distance: "0.5 miles away",
-      likes: "3 friends liked this place",
-      tags: ["Mexican", "Casual", "Bar"],
-      description:
-        "Frida Midtown offers a vibrant atmosphere with delicious Mexican food and refreshing cocktails.",
-      reviews: [
-        "Great food and drinks!",
-        "Loved the ambiance and the service was excellent.",
-        "A bit pricey but worth it for special occasions.",
-      ]
-    },
-  ];
-
   const onSwipe = (direction: string, name: string) => {
-    setLastDirection(direction);
-    if (direction === "right") {
-      console.log(`Saved ${name} to 'come back to it'.`);
-    } else if (direction === "left") {
-      console.log(`Dismissed ${name}.`);
-    }
+    setRestaurants((prevRestaurants) => {
+      // Find the swiped restaurant
+      const swipedRestaurant = prevRestaurants.find(
+        (restaurant) => restaurant.name === name
+      );
+  
+      if (!swipedRestaurant) {
+        return prevRestaurants; // If not found, return the original list
+      }
+  
+      // Update the restaurant's status and lastModified timestamp
+      const updatedRestaurant = {
+        ...swipedRestaurant,
+        status:
+          direction === "left"
+            ? "no"
+            : direction === "right"
+            ? "maybe"
+            : swipedRestaurant.status,
+        lastModified: Date.now(), // Add timestamp for ordering
+      };
+  
+      // Remove the swiped restaurant and add it to the end of the list
+      const remainingRestaurants = prevRestaurants.filter(
+        (restaurant) => restaurant.name !== name
+      );
+
+      if (updatedRestaurant.status == "no") {
+        return remainingRestaurants;
+      } else {
+        return [...remainingRestaurants, updatedRestaurant];
+      }
+    });
+  
+    // Increment refreshKey to force refresh
+    setRefreshKey((prevKey) => prevKey + 1);
+  };
+
+  const onDoubleTap = (name: string) => {
+    setRestaurants((prevRestaurants) =>
+      prevRestaurants.map((restaurant) =>
+        restaurant.name === name ? { ...restaurant, status: "accepted" } : restaurant
+      )
+    );
+
+    // Remove restaurants marked as "accepted"
+    setRestaurants((prevRestaurants) =>
+      prevRestaurants.filter((restaurant) => restaurant.status !== "accepted")
+    );
   };
 
   const goToDetails = (restaurant: any) => {
@@ -96,16 +157,21 @@ const RestaurantDiscovery = () => {
 
       {/* Swipeable Cards */}
       <main className="flex-grow flex items-center justify-center px-6 py-4">
-        <div className="w-full max-w-md h-[75vh] relative">
-          {restaurants.map((restaurant, index) => (
+        <div className="w-full max-w-md h-[75vh] relative" key={refreshKey}>
+        {restaurants
+            .sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0)) // Sort by lastModified in reverse order
+            .map((restaurant) => (
             <TinderCard
               className="absolute w-full h-full rounded-3xl shadow-lg overflow-hidden"
               key={restaurant.name}
               onSwipe={(dir) => onSwipe(dir, restaurant.name)}
-              onCardLeftScreen={() => console.log(`${restaurant.name} left the screen!`)}
               preventSwipe={["up"]}
+              onCardLeftScreen={() => console.log(`${restaurant.name} left the screen`)}
             >
-              <div className="relative w-full h-full">
+              <div
+                className="relative w-full h-full"
+                onDoubleClick={() => onDoubleTap(restaurant.name)}
+              >
                 <img
                   src={restaurant.images[0]}
                   alt={restaurant.name}
