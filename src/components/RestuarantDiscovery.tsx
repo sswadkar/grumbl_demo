@@ -34,7 +34,7 @@ const RestaurantDiscovery = () => {
 
       {/* Swipeable Cards */}
       <main className="flex-grow flex items-center justify-center px-6 py-4">
-        <div className="w-full max-w-md h-[75vh] relative" key={refreshKey}>
+        <div className="w-full h-[75vh] lg:w-[50vh] relative" key={refreshKey}>
         {restaurants
             .filter((restaurant) => restaurant.status === "maybe") // Filter by status "maybe"
             .sort((a, b) => (b.lastModified || 0) - (a.lastModified || 0)) // Sort by lastModified in reverse order
@@ -77,11 +77,12 @@ const RestaurantDiscovery = () => {
           <FaSearch className="text-2xl" />
           <span className="text-xs">Discover</span>
         </button>
-        <button className="flex flex-col items-center text-gray-400">
+        
+        <button className="flex flex-col items-center text-gray-400" onClick={() => navigate("/saved")}>
           <FaBookmark className="text-2xl" />
           <span className="text-xs">Saved</span>
         </button>
-        <button className="flex flex-col items-center text-gray-400">
+        <button className="flex flex-col items-center text-gray-400" onClick={() => navigate("/profile")}>
           <FaUser className="text-2xl" />
           <span className="text-xs">Profile</span>
         </button>

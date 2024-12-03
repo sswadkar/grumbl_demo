@@ -11,6 +11,27 @@ const RestaurantDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null); // Track which button is selected
 
+  const fakeReviewData = [
+    {
+      user: "John Doe",
+      timestamp: "2 hours ago",
+      profilePic: "", // Empty profile pic placeholder
+      review: "Great food and excellent service!",
+    },
+    {
+      user: "Jane Smith",
+      timestamp: "Yesterday",
+      profilePic: "", // Empty profile pic placeholder
+      review: "Loved the ambiance, but a bit pricey.",
+    },
+    {
+      user: "Bruce Wayne",
+      timestamp: "3 days ago",
+      profilePic: "", // Empty profile pic placeholder
+      review: "Perfect for a casual dinner.",
+    },
+  ];
+
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === restaurant.images.length - 1 ? 0 : prevIndex + 1
@@ -33,6 +54,27 @@ const RestaurantDetails = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
+      {/* Back Button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md z-10"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth={2}
+          stroke="currentColor"
+          className="w-6 h-6 text-gray-800"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+
       <header className="relative">
         <div className="relative w-full h-80 overflow-hidden">
           <img
@@ -174,12 +216,17 @@ const RestaurantDetails = () => {
         <div>
           <h2 className="text-lg font-semibold mb-2">Reviews</h2>
           <div className="space-y-4">
-            {restaurant.reviews.map((review: string, index: number) => (
+            {fakeReviewData.map((review, index) => (
               <div
                 key={index}
-                className="bg-white p-4 rounded-lg shadow-md text-gray-700"
+                className="bg-white p-4 rounded-lg shadow-md flex items-start gap-4"
               >
-                {review}
+                <div className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0"></div>
+                <div>
+                  <p className="font-bold">{review.user}</p>
+                  <p className="text-sm text-gray-500">{review.timestamp}</p>
+                  <p className="text-gray-700">{review.review}</p>
+                </div>
               </div>
             ))}
           </div>
