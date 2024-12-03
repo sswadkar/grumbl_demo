@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useRestaurantContext } from "../context/RestuarantContext";
 
 const RestaurantDetails = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const { restaurant } = state;
+  const { updateRestaurantStatus } = useRestaurantContext();
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null); // Track which button is selected
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) =>
@@ -18,6 +21,14 @@ const RestaurantDetails = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? restaurant.images.length - 1 : prevIndex - 1
     );
+  };
+
+  const handleDecision = (status: "no" | "maybe" | "accepted") => {
+    setSelectedStatus(status); // Set the selected status
+    updateRestaurantStatus(restaurant.name, status);
+    setTimeout(() => {
+      navigate(-1); // Navigate back after animation
+    }, 500); // Match animation duration
   };
 
   return (
@@ -69,25 +80,6 @@ const RestaurantDetails = () => {
             </svg>
           </button>
         </div>
-        <button
-          onClick={() => navigate(-1)}
-          className="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            className="w-6 h-6 text-gray-800"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
       </header>
 
       <main className="flex-grow p-6">
@@ -114,8 +106,10 @@ const RestaurantDetails = () => {
         {/* Action Buttons */}
         <div className="flex justify-around mb-6">
           <button
-            onClick={() => console.log("Cancel")}
-            className="bg-red-500 text-white p-4 rounded-full shadow-md"
+            onClick={() => handleDecision("no")}
+            className={`bg-red-500 text-white p-4 rounded-full shadow-md transform transition-transform duration-500 ${
+              selectedStatus === "no" ? "scale-125" : ""
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -133,8 +127,10 @@ const RestaurantDetails = () => {
             </svg>
           </button>
           <button
-            onClick={() => console.log("Maybe")}
-            className="bg-yellow-500 text-white p-4 rounded-full shadow-md"
+            onClick={() => handleDecision("maybe")}
+            className={`bg-yellow-500 text-white p-4 rounded-full shadow-md transform transition-transform duration-500 ${
+              selectedStatus === "maybe" ? "scale-125" : ""
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -152,8 +148,10 @@ const RestaurantDetails = () => {
             </svg>
           </button>
           <button
-            onClick={() => console.log("For Sure")}
-            className="bg-green-500 text-white p-4 rounded-full shadow-md"
+            onClick={() => handleDecision("accepted")}
+            className={`bg-green-500 text-white p-4 rounded-full shadow-md transform transition-transform duration-500 ${
+              selectedStatus === "accepted" ? "scale-125" : ""
+            }`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
